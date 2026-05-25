@@ -1,0 +1,25 @@
+{
+  "name": "castle-mmo-server",
+  "version": "3.0.0",
+  "description": "Castle MMO PvP Game with Node.js Server",
+  "main": "server-mmo.js",
+  "scripts": {
+    "start": "node server-mmo.js",
+    "dev": "nodemon server-mmo.js"
+  },
+  "keywords": [
+    "game",
+    "mmo",
+    "pvp",
+    "castle"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

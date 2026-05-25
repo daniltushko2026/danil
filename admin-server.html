@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Castle MMO - Админ панель</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        h1 {
+            font-size: 2em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .admin-info {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .logout-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #dc2626;
+        }
+
+        .card {
+            background: rgba(0,0,0,0.3);
+            border: 2px solid #fff;
+            border-radius: 10px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 5px;
+        }
+
+        .stat-name {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all 0.3s;
+            margin: 5px;
+        }
+
+        .button:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .button.danger {
+            background: #ef4444;
+        }
+
+        .button.danger:hover {
+            background: #dc2626;
+        }
+
+        .button.success {
+            background: #4ade80;
+        }
+
+        .button.success:hover {
+            background: #22c55e;
+        }
+
+        input, select {
+            padding: 12px;
+            margin: 5px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            font-size: 1em;
+            background: rgba(255,255,255,0.9);
+            color: #000;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #764ba2;
+            box-shadow: 0 0 10px rgba(118, 75, 162, 0.5);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 12px 24px;
+            cursor: pointer;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .tab-button.active {
+            background: #667eea;
+            border-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .players-list, .battles-list {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .player-row {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #ffd700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .player-info {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .player-name {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #ffd700;
+            margin-bottom: 5px;
+        }
+
+        .player-stats {
+            font-size: 0.9em;
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        .player-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .battle-report {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #4ade80;
+        }
+
+        .battle-title {
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 8px;
+        }
+
+        .battle-info {
+            font-size: 0.9em;
+            opacity: 0.9;
+            line-height: 1.8;
+        }
+
+        .win {
+            color: #4ade80;
+        }
+
+        .loss {
+            color: #ef4444;
+        }
+
+        .form-group {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .form-group h3 {
+            margin-bottom: 10px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .form-row.full {
+            grid-template-columns: 1fr;
+        }
+
+        .sync-status {
+            text-align: right;
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-top: 10px;
+        }
+
+        .sync-status.synced {
+            color: #4ade80;
+        }
+
+        .sync-status.syncing {
+            color: #fbbf24;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .player-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .player-actions {
+                width: 100%;
+            }
+
+            .player-actions .button {
+                flex: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚙️ Castle MMO - Админ панель</h1>
+            <div class="admin-info">
+                <span id="adminName"></span>
+                <button class="logout-btn" onclick="logout()">Выход</button>
+            </div>
+        </header>
+
+        <div class="sync-status" id="syncStatus">Загрузка...</div>
+
+        <div class="card">
+            <h2>📊 Статистика сервера</h2>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-value" id="totalPlayers">0</div>
+                    <div class="stat-name">👥 Всего игроков</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="totalGold">0</div>
+                    <div class="stat-name">💰 Всего золота</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="totalIron">0</div>
+                    <div class="stat-name">⚙️ Всего железа</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="totalSoldiers">0</div>
+                    <div class="stat-name">⚔️ Всего солдат</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="totalBattles">0</div>
+                    <div class="stat-name">🏆 Всего боев</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="tabs">
+                <button class="tab-button active" onclick="switchTab('players')">👥 Игроки</button>
+                <button class="tab-button" onclick="switchTab('battles')">🏆 Сражения</button>
+                <button class="tab-button" onclick="switchTab('manage')">💼 Управление</button>
+            </div>
+
+            <!-- PLAYERS TAB -->
+            <div id="players" class="tab-content active">
+                <h3>Список игроков</h3>
+                <input type="text" id="searchPlayer" placeholder="Поиск по имени..." onkeyup="filterPlayers()" style="width: 100%; margin-bottom: 10px;">
+                <div class="players-list" id="playersList"></div>
+            </div>
+
+            <!-- BATTLES TAB -->
+            <div id="battles" class="tab-content">
+                <h3>История сражений</h3>
+                <div style="margin-bottom: 10px;">
+                    <label>Фильтр по игроку:</label>
+                    <input type="text" id="battleFilter" placeholder="Имя игрока..." onkeyup="filterBattles()" style="width: 100%; max-width: 300px;">
+                </div>
+                <div class="battles-list" id="battlesList"></div>
+            </div>
+
+            <!-- MANAGE TAB -->
+            <div id="manage" class="tab-content">
+                <h2>💼 Управление ресурсами</h2>
+
+                <div class="form-group">
+                    <h3>💰 Добавить золото</h3>
+                    <div class="form-row">
+                        <input type="text" id="goldUsername" placeholder="Имя игрока">
+                        <input type="number" id="goldAmount" placeholder="Количество" min="1">
+                        <button class="button success" onclick="addGold()">Добавить</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <h3>⚙️ Добавить железо</h3>
+                    <div class="form-row">
+                        <input type="text" id="ironUsername" placeholder="Имя игрока">
+                        <input type="number" id="ironAmount" placeholder="Количество" min="1">
+                        <button class="button success" onclick="addIron()">Добавить</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <h3>⚔️ Добавить солдат</h3>
+                    <div class="form-row">
+                        <input type="text" id="soldiersUsername" placeholder="Имя игрока">
+                        <input type="number" id="soldiersAmount" placeholder="Количество" min="1">
+                        <button class="button success" onclick="addSoldiers()">Добавить</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <h3>🔄 Сбросить игрока</h3>
+                    <div class="form-row full">
+                        <input type="text" id="resetUsername" placeholder="Имя игрока">
+                        <button class="button danger" onclick="resetPlayer()">Сбросить в начало</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <h3>🗑️ Удалить игрока</h3>
+                    <div class="form-row full">
+                        <input type="text" id="deleteUsername" placeholder="Имя игрока">
+                        <button class="button danger" onclick="deletePlayer()">⚠️ УДАЛИТЬ</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = window.location.origin + '/api';
+        let allPlayers = {};
+        let allBattles = [];
+
+        window.addEventListener('load', () => {
+            checkAdmin();
+            loadData();
+            setInterval(loadData, 1000);
+        });
+
+        function checkAdmin() {
+            const admin = sessionStorage.getItem('adminUser');
+            if (!admin) {
+                alert('❌ Только для админа!');
+                window.location.href = 'index.html';
+                return;
+            }
+            document.getElementById('adminName').textContent = `Админ: ${admin}`;
+        }
+
+        async function loadData() {
+            try {
+                const response = await fetch(`${API_URL}/players`);
+                if (response.ok) {
+                    const data = await response.json();
+                    allPlayers = data.players || {};
+                    allBattles = data.battles || [];
+                    updateSyncStatus('synced');
+                    updateStats();
+                    renderPlayers();
+                    renderBattles();
+                } else {
+                    updateSyncStatus('error');
+                }
+            } catch (e) {
+                updateSyncStatus('offline');
+                console.warn('Load failed:', e);
+            }
+        }
+
+        function updateSyncStatus(status) {
+            const el = document.getElementById('syncStatus');
+            if (status === 'synced') {
+                el.textContent = '✅ Синхронизировано';
+                el.className = 'sync-status synced';
+            } else if (status === 'offline') {
+                el.textContent = '⚠️ Оффлайн';
+                el.className = 'sync-status';
+            } else {
+                el.textContent = '🔄 Загрузка...';
+                el.className = 'sync-status syncing';
+            }
+        }
+
+        function updateStats() {
+            let totalGold = 0, totalIron = 0, totalSoldiers = 0, totalBattles = 0;
+
+            Object.values(allPlayers).forEach(p => {
+                totalGold += p.gold || 0;
+                totalIron += p.iron || 0;
+                totalSoldiers += p.soldiers || 0;
+                totalBattles += (p.battles?.wins || 0) + (p.battles?.losses || 0) + (p.battles?.draws || 0);
+            });
+
+            document.getElementById('totalPlayers').textContent = Object.keys(allPlayers).length;
+            document.getElementById('totalGold').textContent = totalGold;
+            document.getElementById('totalIron').textContent = totalIron;
+            document.getElementById('totalSoldiers').textContent = totalSoldiers;
+            document.getElementById('totalBattles').textContent = totalBattles;
+        }
+
+        function renderPlayers() {
+            const html = Object.values(allPlayers).map(p => {
+                const power = p.stats.attack + p.stats.defense + p.stats.shield;
+                const record = `${p.battles?.wins || 0}W-${p.battles?.losses || 0}L`;
+                return `
+                    <div class="player-row">
+                        <div class="player-info">
+                            <div class="player-name">${p.username}</div>
+                            <div class="player-stats">
+                                💰 ${p.gold} | ⚙️ ${p.iron} | ⚔️ ${p.soldiers} | ⭐ ${power} | ${record}
+                            </div>
+                        </div>
+                        <div class="player-actions">
+                            <button class="button" onclick="quickAddGold('${p.username}')">+100 💰</button>
+                            <button class="button" onclick="quickAddIron('${p.username}')">+50 ⚙️</button>
+                            <button class="button" onclick="quickAddSoldiers('${p.username}')">+1000 ⚔️</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('playersList').innerHTML = html || '<p style="opacity: 0.7;">Нет игроков</p>';
+        }
+
+        function renderBattles() {
+            const html = (allBattles || []).slice(-50).reverse().map(b => {
+                const resultClass = b.result === 'win' ? 'win' : b.result === 'loss' ? 'loss' : '';
+                const resultText = b.result === 'win' ? '✅ ПОБЕДА' : b.result === 'loss' ? '❌ ПОРАЖЕНИЕ' : '🤝 НИЧЬЯ';
+                return `
+                    <div class="battle-report">
+                        <div class="battle-title ${resultClass}">${resultText}: ${b.attacker} vs ${b.defender}</div>
+                        <div class="battle-info">
+                            ⚔️ ${b.attacker}: ${b.attackerPower} | ${b.defender}: ${b.defenderPower}<br>
+                            🎯 Результат: ${b.result}<br>
+                            ⚔️ Потери: ${b.losses} солдат<br>
+                            📅 ${new Date(b.timestamp).toLocaleString('ru-RU')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('battlesList').innerHTML = html || '<p style="opacity: 0.7;">Нет сражений</p>';
+        }
+
+        function filterPlayers() {
+            const query = document.getElementById('searchPlayer').value.toLowerCase();
+            const filtered = Object.values(allPlayers).filter(p => p.username.toLowerCase().includes(query));
+            const html = filtered.map(p => {
+                const power = p.stats.attack + p.stats.defense + p.stats.shield;
+                const record = `${p.battles?.wins || 0}W-${p.battles?.losses || 0}L`;
+                return `
+                    <div class="player-row">
+                        <div class="player-info">
+                            <div class="player-name">${p.username}</div>
+                            <div class="player-stats">
+                                💰 ${p.gold} | ⚙️ ${p.iron} | ⚔️ ${p.soldiers} | ⭐ ${power} | ${record}
+                            </div>
+                        </div>
+                        <div class="player-actions">
+                            <button class="button" onclick="quickAddGold('${p.username}')">+100 💰</button>
+                            <button class="button" onclick="quickAddIron('${p.username}')">+50 ⚙️</button>
+                            <button class="button" onclick="quickAddSoldiers('${p.username}')">+1000 ⚔️</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            document.getElementById('playersList').innerHTML = html;
+        }
+
+        function filterBattles() {
+            const query = document.getElementById('battleFilter').value.toLowerCase();
+            const filtered = (allBattles || []).filter(b => 
+                b.attacker.toLowerCase().includes(query) || 
+                b.defender.toLowerCase().includes(query)
+            );
+            const html = filtered.slice(-50).reverse().map(b => {
+                const resultClass = b.result === 'win' ? 'win' : b.result === 'loss' ? 'loss' : '';
+                const resultText = b.result === 'win' ? '✅ ПОБЕДА' : b.result === 'loss' ? '❌ ПОРАЖЕНИЕ' : '🤝 НИЧЬЯ';
+                return `
+                    <div class="battle-report">
+                        <div class="battle-title ${resultClass}">${resultText}: ${b.attacker} vs ${b.defender}</div>
+                        <div class="battle-info">
+                            ⚔️ ${b.attacker}: ${b.attackerPower} | ${b.defender}: ${b.defenderPower}<br>
+                            🎯 Результат: ${b.result}<br>
+                            ⚔️ Потери: ${b.losses} солдат<br>
+                            📅 ${new Date(b.timestamp).toLocaleString('ru-RU')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            document.getElementById('battlesList').innerHTML = html || '<p style="opacity: 0.7;">Нет сражений</p>';
+        }
+
+        async function quickAddGold(username) {
+            try {
+                const response = await fetch(`${API_URL}/players/${username}/gold`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ amount: 100 })
+                });
+                if (response.ok) {
+                    alert(`✅ +100 💰 игроку ${username}`);
+                    await loadData();
+                }
+            } catch (e) {
+                alert('❌ Ошибка');
+            }
+        }
+
+        async function quickAddIron(username) {
+            try {
+                const response = await fetch(`${API_URL}/players/${username}/iron`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ amount: 50 })
+                });
+                if (response.ok) {
+                    alert(`✅ +50 ⚙️ игроку ${username}`);
+                    await loadData();
+                }
+            } catch (e) {
+                alert('❌ Ошибка');
+            }
+        }
+
+        async function quickAddSoldiers(username) {
+            try {
+                const response = await fetch(`${API_URL}/players/${username}/soldiers`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ amount: 1000 })
+                });
+                if (response.ok) {
+                    alert(`✅ +1000 ⚔️ игроку ${username}`);
+                    await loadData();
+                }
+            } catch (e) {
+                alert('❌ Ошибка');
+            }
+        }
+
+        async function addGold() {
+            const username = document.getElementById('goldUsername').value.trim();
+            const amount = parseInt(document.getElementById('goldAmount').value);
+            if (!username || !amount || amount <= 0) {
+                alert('❌ Заполни правильно');
+                return;
+            }
+            if (!allPlayers[username]) {
+                alert('❌ Игрок не найден');
+                return;
+            }
+            try {
+                await fetch(`${API_URL}/players/${username}/gold`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ amount })
+                });
+                alert(`✅ +${amount} 💰 игроку ${username}`);
+                document.getElementById('goldUsername').value = '';
+                document.getElementById('goldAmount').value = '';
+                await loadData();
+            } catch (e) {
+                alert('❌ Ошибка');
+            }
+        }
+
+        async function addIron() {
+            const username = document.getElementById('ironUsername').value.trim();
+            const amount = parseInt(document.getElementById('ironAmount').value);
+            if (!username || !amount || amount <= 0) {
+                alert('❌ Заполни правильно');
+                return;
+            }
+            if (!allPlayers[username]) {
+                alert('❌ Игрок не найден');
+                return;
+            }
+            try {
+                await fetch(`${API_URL}/players/${username}/iron`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ amount })
+                });
+                alert(`✅ +${amount} ⚙️ игроку ${username}`);
+                document.getElementById('ironUsername').value = '';
+                document.getElementById('ironAmount').value = '';
+                await loadData();
+            } catch (e) {
+                alert('❌ Ошибка');
+            }
+        }
+
+        async function addSoldiers() {
+            const username = document.getElementById('soldiersUsername').value.trim();
+            const amount = parseInt(document.getElementById('soldiersAmount').value);
+            if (!username || !amount || amount <= 0) {
+                alert('❌ Заполни правильно');
+                return;
+            }
+            if (!allPlayers[username]) {
+                alert('❌ Игрок не найден');
+                return;
+            }
+            try {
+                await fetch(`${API_URL}/players/${username}/soldiers`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ amount })
+                });
+                alert(`✅ +${amount} ⚔️ игроку ${username}`);
+                document.getElementById('soldiersUsername').value = '';
+                document.getElementById('soldiersAmount').value = '';
+                await loadData();
+            } catch (e) {
+                alert('❌ Ошибка');
+            }
+        }
+
+        async function resetPlayer() {
+            const username = document.getElementById('resetUsername').value.trim();
+            if (!confirm(`Сбросить ${username}? Это необратимо!`)) return;
+            if (!allPlayers[username]) {
+                alert('❌ Игрок не найден');
+                return;
+            }
+            try {
+                const player = {
+                    ...allPlayers[username],
+                    gold: 100,
+                    iron: 0,
+                    soldiers: 5000,
+                    castleLevel: 1,
+                    castleSignsCollected: 0,
+                    castleSignsNeeded: 10,
+                    stats: { attack: 1, defense: 1, shield: 1 },
+                    battles: { wins: 0, losses: 0, draws: 0 },
+                    battleReports: []
+                };
+                await fetch(`${API_URL}/players/${username}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(player)
+                });
+                alert(`✅ ${username} сброшен в начало`);
+                document.getElementById('resetUsername').value = '';
+                await loadData();
+            } catch (e) {
+                alert('❌ Ошибка');
+            }
+        }
+
+        async function deletePlayer() {
+            const username = document.getElementById('deleteUsername').value.trim();
+            if (!confirm(`⚠️ УДАЛИТЬ ${username}?? Это НЕОБРАТИМО!!`)) return;
+            if (!allPlayers[username]) {
+                alert('❌ Игрок не найден');
+                return;
+            }
+            try {
+                await fetch(`${API_URL}/players/${username}`, {
+                    method: 'DELETE'
+                });
+                alert(`✅ ${username} удалён`);
+                document.getElementById('deleteUsername').value = '';
+                await loadData();
+            } catch (e) {
+                alert('❌ Ошибка');
+            }
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('active'));
+            document.getElementById(tab).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function logout() {
+            sessionStorage.removeItem('adminUser');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

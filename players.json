@@ -1,0 +1,147 @@
+{
+  "gameVersion": "3.0.0-Warfare",
+  "lastUpdated": "2026-05-25T16:45:00.000Z",
+  "players": {
+    "Admin": {
+      "username": "Admin",
+      "password": "admin123",
+      "gold": 5000,
+      "iron": 500,
+      "soldiers": 50000,
+      "castleLevel": 20,
+      "castleSignsCollected": 50,
+      "castleSignsNeeded": 210,
+      "stats": {
+        "attack": 60,
+        "defense": 45,
+        "shield": 40
+      },
+      "battles": {
+        "wins": 100,
+        "losses": 5,
+        "draws": 10
+      },
+      "battleReports": [],
+      "createdAt": "2026-05-25T08:00:00.000Z"
+    },
+    "Danil": {
+      "username": "Danil",
+      "password": "123456",
+      "gold": 800,
+      "iron": 150,
+      "soldiers": 10000,
+      "castleLevel": 8,
+      "castleSignsCollected": 25,
+      "castleSignsNeeded": 90,
+      "stats": {
+        "attack": 20,
+        "defense": 12,
+        "shield": 10
+      },
+      "battles": {
+        "wins": 15,
+        "losses": 8,
+        "draws": 3
+      },
+      "battleReports": [
+        {
+          "attacker": "Danil",
+          "defender": "Player2",
+          "attackerPower": 42,
+          "defenderPower": 11,
+          "result": "win",
+          "losses": 375,
+          "timestamp": "2026-05-25T16:30:00.000Z"
+        }
+      ],
+      "createdAt": "2026-05-25T10:00:00.000Z"
+    },
+    "Player2": {
+      "username": "Player2",
+      "password": "pass123",
+      "gold": 300,
+      "iron": 60,
+      "soldiers": 7500,
+      "castleLevel": 3,
+      "castleSignsCollected": 12,
+      "castleSignsNeeded": 40,
+      "stats": {
+        "attack": 5,
+        "defense": 3,
+        "shield": 3
+      },
+      "battles": {
+        "wins": 6,
+        "losses": 11,
+        "draws": 1
+      },
+      "battleReports": [
+        {
+          "attacker": "Danil",
+          "defender": "Player2",
+          "attackerPower": 42,
+          "defenderPower": 11,
+          "result": "win",
+          "losses": 375,
+          "timestamp": "2026-05-25T16:30:00.000Z"
+        }
+      ],
+      "createdAt": "2026-05-25T12:00:00.000Z"
+    },
+    "Warrior": {
+      "username": "Warrior",
+      "password": "warrior123",
+      "gold": 600,
+      "iron": 100,
+      "soldiers": 8000,
+      "castleLevel": 6,
+      "castleSignsCollected": 18,
+      "castleSignsNeeded": 70,
+      "stats": {
+        "attack": 16,
+        "defense": 10,
+        "shield": 8
+      },
+      "battles": {
+        "wins": 12,
+        "losses": 5,
+        "draws": 2
+      },
+      "battleReports": [],
+      "createdAt": "2026-05-25T09:00:00.000Z"
+    },
+    "Knight": {
+      "username": "Knight",
+      "password": "knight123",
+      "gold": 500,
+      "iron": 80,
+      "soldiers": 6000,
+      "castleLevel": 4,
+      "castleSignsCollected": 15,
+      "castleSignsNeeded": 50,
+      "stats": {
+        "attack": 10,
+        "defense": 8,
+        "shield": 6
+      },
+      "battles": {
+        "wins": 8,
+        "losses": 7,
+        "draws": 1
+      },
+      "battleReports": [],
+      "createdAt": "2026-05-25T11:00:00.000Z"
+    }
+  },
+  "battles": [
+    {
+      "attacker": "Danil",
+      "defender": "Player2",
+      "attackerPower": 42,
+      "defenderPower": 11,
+      "result": "win",
+      "losses": 375,
+      "timestamp": "2026-05-25T16:30:00.000Z"
+    }
+  ]
+}
